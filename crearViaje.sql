@@ -12,4 +12,10 @@ begin
     if v_modelo_autocor = 0 then
         raise_application_error(-20001, 'recorridos inexistente');
     end if;
+
+    --verificar si el autocar existe o no
+    select count(*) into v_mocdelo_autocor from autocares where idAutocares = m_idAutocares;
+    if v_mocdelo_autocor = 0 then
+        raise_application_error(-20002, 'autocar_inexistente');
+    end if;
 end;
