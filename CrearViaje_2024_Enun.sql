@@ -1,4 +1,3 @@
-
 drop table modelos cascade constraints;
 drop table autocares cascade constraints;
 drop table recorridos cascade constraints;
@@ -151,20 +150,20 @@ begin
   --Caso 4: Crea un viaje OK
   begin
     crearViaje(1, 1, trunc(current_date)+3, 'Pedrito');
-    dbms_output.put_line('Parece OK Crea un viaje válido');
+    dbms_output.put_line('Parece OK Crea un viaje vï¿½lido');
   exception
     when others then
-        dbms_output.put_line('MAL Crea un viaje válido: '||sqlerrm);
+        dbms_output.put_line('MAL Crea un viaje vï¿½lido: '||sqlerrm);
   end;
   
   
   --Caso 5: Crea un viaje OK con autcar sin modelo
   begin
     crearViaje(1, 4, trunc(current_date)+4, 'Jorgito');
-    dbms_output.put_line('Parece OK Crea un viaje válido sin modelo');
+    dbms_output.put_line('Parece OK Crea un viaje vï¿½lido sin modelo');
   exception
     when others then
-        dbms_output.put_line('MAL Crea un viaje válido sin modelo: '||sqlerrm);
+        dbms_output.put_line('MAL Crea un viaje vï¿½lido sin modelo: '||sqlerrm);
   end;
   
   
@@ -183,7 +182,7 @@ begin
     FROM viajes;
     
     if varContenidoReal=varContenidoEsperado then
-      dbms_output.put_line('OK: Sí que modifica bien la BD.'); 
+      dbms_output.put_line('OK: Sï¿½ que modifica bien la BD.'); 
     else
       dbms_output.put_line('Mal no modifica bien la BD.'); 
       dbms_output.put_line('Contenido real:     '||varContenidoReal); 
