@@ -5,6 +5,7 @@ create or replace procedure crearViaje(
     m_conductor varchar
     ) is
     v_modelo_autocor int;
+    v_plazas_disponibles int;
 
 begin
     --verificar si el recorrido existe o no
@@ -17,5 +18,13 @@ begin
     select count(*) into v_mocdelo_autocor from autocares where idAutocares = m_idAutocares;
     if v_mocdelo_autocor = 0 then
         raise_application_error(-20002, 'autocar_inexistente');
+    end if;
+
+    --verificar si el autocar esta ocupado en la fecha especificada
+    select count(*) into v_plazas_disponibles
+    from viajes
+    where idAutocares = m_idAutocares and fecha = m_fecha;
+    if v_plazas_disponibles.length > 0 then
+        raise_application_error(-20003, 'autocar_ocupado');
     end if;
 end;
