@@ -27,4 +27,10 @@ begin
     if v_plazas_disponibles.length > 0 then
         raise_application_error(-20003, 'autocar_ocupado');
     end if;
+
+    -- Obtener el numero de plazas disponibles del autocar
+    select NVL(m.nplazas, 25) into v_plazas_disponibles
+    from autocares a
+    left join modelos m on a.modelo = m.idModelo
+    where a.idAutocar = m.idAutocar;
 end;
