@@ -43,7 +43,6 @@ begin
             RAISE_APPLICATION_ERROR(-20004, 'VIAJE_DUPLICADO');
     end;
 
-
     commit;
 exception
     when no_data_found then
