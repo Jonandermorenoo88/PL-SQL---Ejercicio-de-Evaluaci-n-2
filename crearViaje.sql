@@ -4,27 +4,27 @@ create or replace procedure crearViaje(
     m_fecha date, 
     m_conductor varchar
     ) is
-    v_modelo_autocor int;
+    v_modelo_autocar int;
     v_plazas_disponibles int;
 
 begin
     --verificar si el recorrido existe o no
-    select count(*) into v_modelo_autocor from recorridos where idRecorrido = m_idRecorrido;
-    if v_modelo_autocor = 0 then
+    select count(*) into v_modelo_autocar from recorridos where idRecorrido = m_idRecorrido;
+    if v_modelo_autocar = 0 then
         raise_application_error(-20001, 'recorridos inexistente');
     end if;
 
     --verificar si el autocar existe o no
-    select count(*) into v_mocdelo_autocor from autocares where idAutocares = m_idAutocares;
-    if v_mocdelo_autocor = 0 then
+    select count(*) into v_modelo_autocar from autocares where idAutocar = m_idAutocar;
+    if v_modelo_autocar = 0 then
         raise_application_error(-20002, 'autocar_inexistente');
     end if;
 
     --verificar si el autocar esta ocupado en la fecha especificada
     select count(*) into v_plazas_disponibles
     from viajes
-    where idAutocares = m_idAutocares and fecha = m_fecha;
-    if v_plazas_disponibles.length > 0 then
+    where idAutocar = m_idAutocar and fecha = m_fecha;
+    if v_plazas_disponibles > 0 then
         raise_application_error(-20003, 'autocar_ocupado');
     end if;
 
@@ -32,11 +32,11 @@ begin
     select NVL(m.nplazas, 25) into v_plazas_disponibles
     from autocares a
     left join modelos m on a.modelo = m.idModelo
-    where a.idAutocar = m.idAutocar;
+    where a.idAutocar =  m_idAutocar;
 
     --Insertar el nuevo viaje
     begin
-    insert into viaje(idViaje, idAutocar, idRecorrido, fecha, nPlazasLibres, conductor)
+    insert into viajes (idViaje, idAutocar, idRecorrido, fecha, nPlazasLibres, conductor)
     values ((select nvl (max(idViaje),0) + 1 from viajes), m_conductor, m_idRecorrido, m_fecha, v_plazas_disponibles, m_conductor);
     exception
         when dup_val_on_index then
