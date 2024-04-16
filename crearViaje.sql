@@ -34,14 +34,15 @@ begin
     left join modelos m on a.modelo = m.idModelo
     where a.idAutocar =  m_idAutocar;
 
-    --Insertar el nuevo viaje
+    -- Insertar el nuevo viaje
     begin
-    insert into viajes (idViaje, idAutocar, idRecorrido, fecha, nPlazasLibres, conductor)
-    values ((select nvl (max(idViaje),0) + 1 from viajes), m_conductor, m_idRecorrido, m_fecha, v_plazas_disponibles, m_conductor);
+        insert into viajes (idViaje, idAutocar, idRecorrido, fecha, nPlazasLibres, conductor)
+        values ((select NVL(max(idViaje), 0) + 1 from viajes), m_idAutocar, m_idRecorrido, m_fecha, v_plazas_disponibles, m_conductor);
     exception
-        when dup_val_on_index then
-            raise_application_error(-20004, 'viaje_duplicado');
+        WHEN DUP_VAL_ON_INDEX THEN
+            RAISE_APPLICATION_ERROR(-20004, 'VIAJE_DUPLICADO');
     end;
+
 
     commit;
 exception
