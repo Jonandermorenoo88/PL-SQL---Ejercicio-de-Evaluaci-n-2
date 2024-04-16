@@ -33,4 +33,21 @@ begin
     from autocares a
     left join modelos m on a.modelo = m.idModelo
     where a.idAutocar = m.idAutocar;
+
+    --Insertar el nuevo viaje
+    begin
+    insert into viaje(idViaje, idAutocar, idRecorrido, fecha, nPlazasLibres, conductor)
+    values ((select nvl (max(idViaje),0) + 1 from viajes), m_conductor, m_idRecorrido, m_fecha, v_plazas_disponibles, m_conductor);
+    exception
+        when dup_val_on_index then
+            raise_application_error(-20004, 'viaje_duplicado');
+    end;
+
+    commit;
+exception
+    when no_data_found then
+        raise_application_error(-20001, 'recorrido_inexistente');
+    when others then
+        rollback;
+        raise;
 end;
