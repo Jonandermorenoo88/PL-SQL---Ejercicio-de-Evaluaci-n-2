@@ -18,7 +18,7 @@ begin
     select count(*) into v_modelo_autocar from autocares where idAutocar = m_idAutocar;
     if v_modelo_autocar = 0 then
         raise_application_error(-20002, 'autocar_inexistente');
-    end if;
+    end if; 
 
     --verificar si el autocar esta ocupado en la fecha especificada
     select count(*) into v_plazas_disponibles
