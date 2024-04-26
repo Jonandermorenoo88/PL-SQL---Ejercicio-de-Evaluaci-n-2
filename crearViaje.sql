@@ -29,10 +29,10 @@ begin
     end if;
 
     -- Obtener el numero de plazas disponibles del autocar
-    select NVL(m.nplazas, 25) into v_plazas_disponibles
+    select nPlazas into v_plazas_disponibles
     from autocares a
-    left join modelos m on a.modelo = m.idModelo
-    where a.idAutocar =  m_idAutocar;
+    join modelos m on a.modelo = m.idmodelo
+    where a.idautocar = m_idAutocar;
 
     -- Insertar el nuevo viaje
     begin
