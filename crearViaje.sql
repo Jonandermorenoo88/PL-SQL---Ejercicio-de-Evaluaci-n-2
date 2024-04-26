@@ -4,15 +4,15 @@ create or replace procedure crearViaje(
     m_fecha date, 
     m_conductor varchar
     ) is
-    v_modelo_autocar int;
-    v_plazas_disponibles int;
+    v_modelo_autocar int; --variable para almacenar el resultado de las consultas
+    v_plazas_disponibles int; -- variable para almacenar el numero de plazas disponibles
 
 begin
     --verificar si el recorrido existe o no
     select count(*) into v_modelo_autocar from recorridos where idRecorrido = m_idRecorrido;
-    if v_modelo_autocar = 0 then
-        raise_application_error(-20001, 'recorridos inexistente');
-    end if;
+    if v_modelo_autocar = 0 then -- si no encuentra el recorrido
+        raise_application_error(-20001, 'recorridos inexistente'); --por lo tanto genera un error
+    end if; --cerramos el if
 
     --verificar si el autocar existe o no
     select count(*) into v_modelo_autocar from autocares where idAutocar = m_idAutocar;
@@ -29,10 +29,10 @@ begin
     end if;
 
     -- Obtener el numero de plazas disponibles del autocar
-    select nPlazas into v_plazas_disponibles
+    select NVL(m.nplazas, 25) into v_plazas_disponibles
     from autocares a
-    join modelos m on a.modelo = m.idmodelo
-    where a.idautocar = m_idAutocar;
+    left join modelos m on a.modelo = m.idModelo
+    where a.idAutocar =  m_idAutocar;
 
     -- Insertar el nuevo viaje
     begin
