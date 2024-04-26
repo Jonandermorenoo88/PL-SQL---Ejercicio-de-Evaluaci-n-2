@@ -13,21 +13,21 @@ begin
     if v_modelo_autocar = 0 then -- si no encuentra el recorrido
         raise_application_error(-20001, 'recorridos inexistente'); --por lo tanto genera un error
     end if; --cerramos el if
-
+--------------------------------------------------------------------------------------------------
     --verificar si el autocar existe o no
     select count(*) into v_modelo_autocar from autocares where idAutocar = m_idAutocar;
-    if v_modelo_autocar = 0 then
-        raise_application_error(-20002, 'autocar_inexistente');
-    end if; 
-
+    if v_modelo_autocar = 0 then --si no se encuentra el autocar
+        raise_application_error(-20002, 'autocar_inexistente'); --entonces generamos un error
+    end if; --cerramos el if
+-------------------------------------------------------------------------------------------------
     --verificar si el autocar esta ocupado en la fecha especificada
     select count(*) into v_plazas_disponibles
     from viajes
     where idAutocar = m_idAutocar and fecha = m_fecha;
-    if v_plazas_disponibles > 0 then
-        raise_application_error(-20003, 'autocar_ocupado');
-    end if;
-
+    if v_plazas_disponibles > 0 then --si el autocar esta ocupado
+        raise_application_error(-20003, 'autocar_ocupado'); --por lo tanto generamos el error
+    end if; -- cerramos el if
+--------------------------------------------------------------------------------------------------
     -- Obtener el numero de plazas disponibles del autocar
     select NVL(m.nplazas, 25) into v_plazas_disponibles
     from autocares a
