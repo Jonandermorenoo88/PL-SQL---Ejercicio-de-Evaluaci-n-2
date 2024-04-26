@@ -29,25 +29,26 @@ begin
     end if; -- cerramos el if
 --------------------------------------------------------------------------------------------------
     -- Obtener el numero de plazas disponibles del autocar
-    select NVL(m.nplazas, 25) into v_plazas_disponibles
+    --NVL se utiliza para remplazar un valor nulo a otro especifico.
+    select NVL(m.nplazas, 25) into v_plazas_disponibles --seleccionamos el numero de plazas del autocar
     from autocares a
-    left join modelos m on a.modelo = m.idModelo
-    where a.idAutocar =  m_idAutocar;
-
+    left join modelos m on a.modelo = m.idModelo --unimos las tablas de autocales con las de modelos ya que tienen relacion
+    where a.idAutocar =  m_idAutocar; --condicion para el autocar especifico
+-------------------------------------------------------------------------------------------------
     -- Insertar el nuevo viaje
     begin
         insert into viajes (idViaje, idAutocar, idRecorrido, fecha, nPlazasLibres, conductor)
         values ((select NVL(max(idViaje), 0) + 1 from viajes), m_idAutocar, m_idRecorrido, m_fecha, v_plazas_disponibles, m_conductor);
     exception
-        WHEN DUP_VAL_ON_INDEX THEN
-            RAISE_APPLICATION_ERROR(-20004, 'VIAJE_DUPLICADO');
+        WHEN DUP_VAL_ON_INDEX THEN --si hay un intento de insertar un viaje duplicado
+            RAISE_APPLICATION_ERROR(-20004, 'viaje_duplicado'); --genera un error de viaje duplicado
     end;
 
-    commit;
+    commit; --hacemos una confirmacion de la transaccion despues de la inserccion del nuevo viaje
 exception
-    when no_data_found then
-        raise_application_error(-20001, 'recorrido_inexistente');
+    when no_data_found then --si aqui no se encuentra el recorrido especifico
+        raise_application_error(-20001, 'recorrido_inexistente'); --genera un error
     when others then
-        rollback;
-        raise;
+        rollback; --aqui si por ejemplo ocurre otro tipo de error que desaga los cambios
+        raise; --lanza una expecion para mostrar el error
 end;
